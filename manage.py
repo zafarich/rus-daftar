@@ -2,8 +2,12 @@
 
   python manage.py import topics/01_predlozhny.json [--activate]
   python manage.py check  topics/02_xxx.json      # faqat tekshirish, bazaga yozmaydi
-  python manage.py list
-  python manage.py activate <slug> [--restart]
+  python manage.py list                           # * — yangi foydalanuvchilar uchun standart mavzu
+  python manage.py activate <slug>                # standart mavzuni almashtirish
+  python manage.py users                          # foydalanuvchilar soni
+
+--activate va activate faqat YANGI foydalanuvchilarga ta'sir qiladi. Har kim o'z mavzusini
+botda (/topic slug) yoki daftarda o'zi tanlaydi.
 """
 import json
 import sys
@@ -33,11 +37,13 @@ def main(argv):
             print("✔ Fayl to'g'ri:", ", ".join(f"{k}={v}" for k, v in kinds.items()))
         elif cmd == "list":
             for t in db.list_topics():
-                print(f"{'*' if t['active'] else ' '} {t['slug']:<24} {t['n_items']:>4} savol  "
-                      f"boshlangan: {t['started_on'] or '-'}  {t['title']}")
+                print(f"{'*' if t['active'] else ' '} {t['slug']:<24} {t['n_items']:>4} savol  {t['title']}")
         elif cmd == "activate":
-            t = db.activate_topic(args[0], restart="--restart" in args)
-            print(f"✔ Faol: {t['title']} (boshlangan {t['started_on']})")
+            t = db.set_default_topic(args[0])
+            print(f"✔ Yangi foydalanuvchilar uchun standart mavzu: {t['title']}")
+        elif cmd == "users":
+            c = db.user_count()
+            print(f"Jami: {c['total']}, avtomatik xabar oladi: {c['auto']}, botni bloklagan: {c['blocked']}")
         else:
             print(__doc__)
             return 1

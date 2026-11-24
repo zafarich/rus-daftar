@@ -15,13 +15,11 @@ async def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     if not config.BOT_TOKEN or not config.ACCESS_KEY:
         raise SystemExit("BOT_TOKEN va ACCESS_KEY .env da bo'lishi shart")
-    if not config.OWNER_ID:
-        logging.warning("OWNER_ID yo'q: botga /myid yuboring va .env ga yozing")
-    db.conn()
+    db.conn()   # eski bitta foydalanuvchili baza bo'lsa, shu yerda OWNER_ID ga ko'chiriladi
 
     bot = Bot(config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
-    dp.include_routers(botmod.open_router, botmod.router)
+    dp.include_router(botmod.router)
     # Eski loyiha webhook ishlatgan bo'lsa, uni o'chiramiz (polling bilan to'qnashmasin)
     await bot.delete_webhook(drop_pending_updates=False)
     await bot.set_my_commands(botmod.COMMANDS)

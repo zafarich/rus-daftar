@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rus daftari</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
@@ -28,6 +29,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 header{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;
   max-width:820px;margin:0 auto;padding:1rem 1.25rem .5rem}
 header h1{font-size:1.15rem;font-weight:600;margin:0;letter-spacing:-.01em}
+header .tools{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;min-width:0}
 select{font:inherit;background:var(--sheet);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;max-width:100%}
 .sheet{max-width:820px;margin:0 auto 3rem;background:var(--sheet);border-left:3px solid var(--red);min-height:70vh;padding:1.25rem 1.5rem 2.5rem 2rem}
 .title{font-size:1.5rem;font-weight:600;line-height:1.25;margin:.25rem 0 1rem;max-width:34ch}
@@ -75,7 +77,7 @@ input.answer{font:inherit;font-size:1.25rem;width:100%;max-width:28rem;padding:.
 <body>
 <header>
   <h1>Rus daftari</h1>
-  <select id="topicSel" aria-label="Mavzu"></select>
+  <div class="tools" id="tools"><select id="topicSel" aria-label="Mavzu"></select></div>
 </header>
 <main class="sheet" id="sheet"><p class="muted">Yuklanmoqda…</p></main>
 
@@ -85,6 +87,18 @@ let keys = null;
 const $sheet = document.getElementById("sheet");
 const $sel = document.getElementById("topicSel");
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// Telegram Mini App: ichida ochilganda initData imzosi bilan kiramiz
+const TG = window.Telegram && window.Telegram.WebApp;
+const INIT = (TG && TG.initData) || "";
+if (INIT) {
+  TG.ready(); TG.expand();
+  try {
+    const bg = getComputedStyle(document.documentElement).getPropertyValue("--sheet").trim();
+    if (TG.isVersionAtLeast("6.1")) { TG.setHeaderColor(bg); TG.setBackgroundColor(bg); }
+    if (TG.isVersionAtLeast("7.7")) TG.disableVerticalSwipes(); // kartochkada pastga surganda yopilmasin
+  } catch {}
+}
 const S = { topics: [], topic: null, tab: "rule", ex: null, cards: null, drill: null };
 
 function el(tag, attrs = {}, ...kids) {
@@ -101,8 +115,11 @@ function el(tag, attrs = {}, ...kids) {
 // DOM append(null) "null" matnini chiqaradi, shuning uchun bo'shlarini tashlab yuboramiz
 const add = (parent, ...kids) => parent.append(...kids.filter(k => k != null && k !== false));
 async function api(path, body) {
-  const r = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
-  if (r.status === 401) { location.reload(); throw new Error("auth"); }
+  const headers = {};
+  if (INIT) headers["X-Telegram-Init-Data"] = INIT;
+  if (body) headers["Content-Type"] = "application/json";
+  const r = await fetch(path, body ? { method: "POST", headers, body: JSON.stringify(body) } : { headers });
+  if (r.status === 401) { showLocked(); throw new Error("auth"); }
   if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
   return r.json();
 }
@@ -158,7 +175,23 @@ function inline(text) { // **qalin** ni xavfsiz ko'rsatish
 }
 
 // ---------- yuklash ----------
+function showLocked() {
+  $sel.hidden = true;
+  $sheet.replaceChildren(el("div", { class: "empty" },
+    el("h2", { class: "title" }, "Daftarga kirish"),
+    INIT ? el("p", {}, "Sessiya eskirgan. Daftarni yopib, botdan qayta oching.")
+         : el("p", {}, "Daftar Telegram bot orqali ochiladi. Botga ", el("b", {}, "/daftar"),
+                 " yuboring va «Daftarni ochish» yoki «Brauzerda ochish» tugmasini bosing.")));
+}
+
 async function boot() {
+  if (!S.me) {
+    S.me = await api("/api/me");
+    // Telegram ichida ovoz bilan ishlash har doim ham ishlamaydi: brauzerda ochish imkoniyati
+    if (INIT && S.me.browser_url)
+      document.getElementById("tools").append(el("button", { class: "chip", type: "button",
+        onclick: () => TG.openLink(S.me.browser_url) }, "🌐 Brauzerda"));
+  }
   S.topics = await api("/api/topics");
   $sel.replaceChildren(...S.topics.map(t => el("option", { value: t.slug }, (t.active ? "★ " : "") + t.title)));
   if (!S.topics.length) {
@@ -364,7 +397,7 @@ function renderPlan(box) {
 
 document.addEventListener("keydown", ev => { if (keys && !ev.metaKey && !ev.ctrlKey && !ev.altKey) keys(ev); });
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
-boot().catch(err => $sheet.replaceChildren(el("p", {}, "Yuklab bo'lmadi: " + err.message)));
+boot().catch(err => { if (err.message !== "auth") $sheet.replaceChildren(el("p", {}, "Yuklab bo'lmadi: " + err.message)); });
 </script>
 </body>
 </html>

@@ -3,9 +3,15 @@
 Bitta konteynerda ikki narsa ishlaydi:
 
 - **Telegram bot.** Kuniga bir necha marta o'zi savol yuboradi (so'z, predlog, qo'shimcha, to'liq gap, tanlash), javobingizni tekshiradi va keyingisiga o'tadi. Ertalab 7 kunlik rejaning bugungi vazifasini yuboradi, kechqurun «Bajarildimi?» deb so'raydi.
-- **Veb-daftar** (`https://DOMAIN`). Bo'limlar: qoida, flip kartochkalar, mashq (predlog / qo'shimcha / tanlash / tarjima / to'liq gap), tezkor «ramka» mashqi va 7 kunlik reja. Ruscha javobni ovoz chiqarib o'qiydi, Chrome'da javobni ovoz bilan aytish ham mumkin.
+- **Veb-daftar** (`https://DOMAIN`) — Telegram Mini App sifatida bot ichida ochiladi, brauzerda ham ishlaydi. Bo'limlar: qoida, flip kartochkalar, mashq (predlog / qo'shimcha / tanlash / tarjima / to'liq gap), tezkor «ramka» mashqi va 7 kunlik reja. Ruscha javobni ovoz chiqarib o'qiydi, Chrome'da javobni ovoz bilan aytish ham mumkin.
 
-Xato qilingan savol 10 daqiqadan keyin, to'g'ri topilgani esa 1, 2, 4, 8… kundan keyin qaytadi (Leitner takrorlash usuli). Bot va veb bitta bazadan foydalanadi, shuning uchun natijalar umumiy.
+Xato qilingan savol 10 daqiqadan keyin, to'g'ri topilgani esa 1, 2, 4, 8… kundan keyin qaytadi (Leitner takrorlash usuli).
+
+**Ko'p foydalanuvchi.** Botdan istalgan Telegram foydalanuvchisi foydalana oladi. Mavzu va savollar umumiy, natijalar, 7 kunlik reja va faol mavzu esa har kimniki alohida. Bot va daftar bitta bazadan foydalanadi, shuning uchun bir odamning botdagi va daftardagi natijalari umumiy.
+
+**Kirish.** Telegram ichida daftar foydalanuvchini Telegram imzosi (`initData`) orqali taniydi, parol kerak emas. Telegram'dan tashqarida ochish uchun bot har kimga shaxsiy «Brauzerda ochish» havolasini beradi (Android'dagi Telegram ichida ovoz funksiyalari ishlamasligi mumkin, brauzerda ishlaydi).
+
+**Mini App sozlamasi.** @BotFather → botingiz → *Bot Settings → Configure Mini App* (va xohlasangiz *Menu Button*) ga `https://DOMAIN/` yozing.
 
 ## O'rnatish
 
@@ -17,13 +23,7 @@ nano .env          # BOT_TOKEN va DOMAIN eski loyihadan; ACCESS_KEY: openssl ran
 docker compose up -d --build
 ```
 
-Botga `/myid` yuboring, chiqqan raqamni `.env` dagi `OWNER_ID` ga yozing va qayta ishga tushiring:
-
-```bash
-docker compose up -d
-```
-
-Birinchi mavzuni yuklang:
+Birinchi mavzuni yuklang (`--activate` — yangi foydalanuvchilarga shu mavzu beriladi):
 
 ```bash
 docker compose exec daftar python manage.py import topics/01_predlozhny.json --activate
@@ -99,13 +99,16 @@ docker compose exec daftar python manage.py check  topics/02_vinitelny.json
 docker compose exec daftar python manage.py import topics/02_vinitelny.json --activate
 ```
 
-Mavjud mavzuni tuzatib qayta import qilsangiz, o'zgarmagan savollar bo'yicha natijalaringiz saqlanib qoladi.
+Mavjud mavzuni tuzatib qayta import qilsangiz, o'zgarmagan savollar bo'yicha hammaning natijasi saqlanib qoladi.
+
+`--activate` faqat yangi foydalanuvchilarga ta'sir qiladi: mavjudlar yangi mavzuni `/topics` → `/topic slug` yoki daftardagi ro'yxatdan o'zi tanlaydi.
 
 Boshqa buyruqlar:
 
 ```bash
-docker compose exec daftar python manage.py list
-docker compose exec daftar python manage.py activate predlozhny --restart   # 7 kunni qaytadan
+docker compose exec daftar python manage.py list                  # * — standart mavzu
+docker compose exec daftar python manage.py activate predlozhny   # standart mavzuni almashtirish
+docker compose exec daftar python manage.py users                 # foydalanuvchilar soni
 ```
 
 ## Bot buyruqlari
@@ -118,7 +121,11 @@ docker compose exec daftar python manage.py activate predlozhny --restart   # 7 
 | `/topics`, `/topic slug` | Mavzular, faol mavzuni almashtirish |
 | `/restart` | Faol mavzuning 7 kunini qaytadan boshlash |
 | `/stats` | Bugungi va haftalik natija |
-| `/daftar` | Veb-daftar havolasi |
+| `/daftar` | Daftarni Telegram ichida yoki brauzerda ochish |
+| `/off`, `/on` | Avtomatik savol va eslatmalarni o'chirish / yoqish |
+| `/myid` | Telegram ID |
+
+Botni bloklagan foydalanuvchiga avtomatik xabar yuborish o'zi to'xtaydi, u yana yozsa qayta yoqiladi.
 
 Vaqtlar `.env` da sozlanadi: `QUIZ_TIMES`, `PLAN_MORNING`, `PLAN_EVENING`.
 
