@@ -317,15 +317,21 @@ def set_default_topic(slug):
 
 
 def list_topics(uid: int | None = None):
-    """Mavzular ro'yxati. uid berilsa: o'sha foydalanuvchining faol mavzusi va o'zlashtirgani."""
-    rows = q("SELECT t.id, t.slug, t.title, t.active AS is_default, COUNT(i.id) AS n_items, "
-             "SUM(CASE WHEN p.box>=3 THEN 1 ELSE 0 END) AS learned "
+    """Mavzular ro'yxati. uid berilsa: o'sha foydalanuvchining faol mavzusi, reja sanasi va
+    natijasi (learned — kamida 3 marta ketma-ket to'g'ri, seen — kamida bir marta javob berilgan)."""
+    rows = q("SELECT t.id, t.slug, t.title, t.active AS is_default, t.plan_json, ut.started_on, "
+             "COUNT(i.id) AS n_items, "
+             "COALESCE(SUM(CASE WHEN p.box>=3 THEN 1 ELSE 0 END),0) AS learned, "
+             "COALESCE(SUM(CASE WHEN p.item_id IS NOT NULL THEN 1 ELSE 0 END),0) AS seen "
              "FROM topics t LEFT JOIN items i ON i.topic_id=t.id "
              "LEFT JOIN progress p ON p.item_id=i.id AND p.user_id=? "
-             "GROUP BY t.id ORDER BY t.sort, t.id", (uid,))
+             "LEFT JOIN user_topics ut ON ut.topic_id=t.id AND ut.user_id=? "
+             "GROUP BY t.id ORDER BY t.sort, t.id", (uid, uid))
     active_id = _active_topic_id(uid) if uid is not None else None
     for r in rows:
         r["active"] = int(r["id"] == active_id) if uid is not None else r["is_default"]
+        r["plan_days"] = len(json.loads(r.pop("plan_json") or "[]"))
+        r["today"] = plan_day(r)
     return rows
 
 

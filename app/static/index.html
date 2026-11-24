@@ -11,14 +11,16 @@
 <style>
 :root{
   --sheet:#FFFFFF; --ink:#1C3D8F; --ink-soft:#5470B3;
-  --red:#C42B3A; --green:#24774A; --text:#23272E; --muted:#5D6672; --line:#CCD6E1;
+  --red:#C42B3A; --green:#24774A; --text:#23272E; --muted:#5D6672; --line:#D5DDE7;
+  --track:#EEF2F7; --seen:#B8C7EA; --shadow:0 1px 2px rgba(16,24,40,.05),0 2px 6px rgba(16,24,40,.06);
   --font:"Golos Text", "Segoe UI", system-ui, -apple-system, sans-serif;
   --hand:"Caveat", "Segoe Print", "Bradley Hand", cursive;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root{ --sheet:#171D26; --ink:#93B4FF; --ink-soft:#7390D8;
-    --red:#FF7C86; --green:#6FD39A; --text:#E5E9EF; --muted:#9AA4B2; --line:#2C3644; color-scheme:dark; }
+    --red:#FF7C86; --green:#6FD39A; --text:#E5E9EF; --muted:#9AA4B2; --line:#2C3644;
+    --track:#212934; --seen:#3A4C7C; --shadow:none; color-scheme:dark; }
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -26,16 +28,46 @@ body{font-family:var(--font);color:var(--text);background:var(--sheet);font-size
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-header{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;
-  max-width:820px;margin:0 auto;padding:1rem 1.25rem .5rem}
+header{display:flex;gap:1rem;align-items:center;justify-content:space-between;
+  max-width:820px;min-height:3.25rem;margin:0 auto;padding:.75rem 1.25rem .25rem}
 header h1{font-size:1.15rem;font-weight:600;margin:0;letter-spacing:-.01em}
-header .tools{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;min-width:0}
-select{font:inherit;background:var(--sheet);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;max-width:100%}
-.sheet{max-width:820px;margin:0 auto 3rem;background:var(--sheet);border-left:3px solid var(--red);min-height:70vh;padding:1.25rem 1.5rem 2.5rem 2rem}
+header .back{background:none;border:0;padding:.25rem 0;color:var(--ink);font-weight:500}
+.sheet{max-width:820px;margin:0 auto 3rem;background:var(--sheet);min-height:70vh;padding:.5rem 1.25rem 2.5rem}
 .title{font-size:1.5rem;font-weight:600;line-height:1.25;margin:.25rem 0 1rem;max-width:34ch}
-nav.tabs{display:flex;gap:1.25rem;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:1.5rem}
-nav.tabs button{background:none;border:0;padding:.4rem 0;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
-nav.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ink);font-weight:500}
+
+/* Bosh sahifa: mavzular */
+.hello{font-size:1.6rem;font-weight:600;line-height:1.2;margin:.25rem 0 .3rem;letter-spacing:-.01em}
+.topics{display:grid;gap:.75rem;margin-top:1.25rem}
+.topic{display:block;color:inherit;text-decoration:none;background:var(--sheet);border:1px solid var(--line);
+  border-radius:14px;padding:1rem 1.1rem 1.05rem;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+.topic:hover{border-color:var(--ink-soft)}
+.topic:active{transform:scale(.99)}
+.topic:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.topic .meta{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:.4rem}
+.badge{background:var(--ink);color:var(--sheet);border-radius:999px;padding:.05rem .55rem;font-weight:500;font-size:.75rem}
+.topic h3{font-size:1.1rem;font-weight:600;line-height:1.3;margin:0 0 .85rem}
+.prog{display:flex;align-items:center;gap:.8rem}
+.track{flex:1;display:flex;height:8px;border-radius:999px;background:var(--track);overflow:hidden}
+.track i{display:block;height:100%}
+.track .l{background:var(--ink)}
+.track .s{background:var(--seen)}
+.pct{font-size:1.4rem;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink);min-width:3.2ch;text-align:right}
+.topic .foot{font-size:.8rem;color:var(--muted);margin-top:.5rem}
+.key{display:inline-block;width:.6rem;height:.6rem;border-radius:2px;margin-right:.35rem}
+.key.l{background:var(--ink)}
+.key.s{background:var(--seen)}
+.legend{display:flex;flex-wrap:wrap;gap:.2rem .9rem;margin:0}
+.legend > span{white-space:nowrap}
+
+/* Mavzu ichidagi tablar */
+nav.tabs{position:sticky;top:6px;z-index:5;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;
+  padding:4px;margin:0 0 1.5rem;background:var(--track);border-radius:14px;box-shadow:0 0 0 6px var(--sheet)}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;border:0;border-radius:10px;
+  background:none;color:var(--muted);padding:.5rem .2rem .45rem;font-size:.78rem;font-weight:500;line-height:1.1}
+nav.tabs button svg{width:22px;height:22px;flex:none}
+nav.tabs button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+nav.tabs button:hover{color:var(--text)}
+nav.tabs button[aria-selected=true]{background:var(--ink);color:var(--sheet);box-shadow:var(--shadow)}
 .muted{color:var(--muted)}
 .small{font-size:.875rem}
 .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
@@ -70,22 +102,19 @@ input.answer{font:inherit;font-size:1.25rem;width:100%;max-width:28rem;padding:.
 .days ul{margin:.25rem 0 .5rem;padding-left:1.2rem;max-width:60ch}
 .status-done{color:var(--green)} .status-missed{color:var(--red)}
 .empty{padding:2rem 0;max-width:40ch}
-@media (max-width:560px){ .sheet{padding:1rem 1rem 2rem 1.25rem} .prompt{font-size:1.35rem} }
+@media (max-width:560px){ header{padding:.6rem 1rem .25rem} .sheet{padding:.5rem 1rem 2rem} .prompt{font-size:1.35rem} }
 @media (prefers-reduced-motion:reduce){ .bar.run > i{animation-duration:.01s} }
 </style>
 </head>
 <body>
-<header>
-  <h1>Rus daftari</h1>
-  <div class="tools" id="tools"><select id="topicSel" aria-label="Mavzu"></select></div>
-</header>
+<header id="hdr"><h1>Rus daftari</h1></header>
 <main class="sheet" id="sheet"><p class="muted">Yuklanmoqda…</p></main>
 
 <script>
 "use strict";
 let keys = null;
 const $sheet = document.getElementById("sheet");
-const $sel = document.getElementById("topicSel");
+const $hdr = document.getElementById("hdr");
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 // Telegram Mini App: ichida ochilganda initData imzosi bilan kiramiz
@@ -97,9 +126,10 @@ if (INIT) {
     const bg = getComputedStyle(document.documentElement).getPropertyValue("--sheet").trim();
     if (TG.isVersionAtLeast("6.1")) { TG.setHeaderColor(bg); TG.setBackgroundColor(bg); }
     if (TG.isVersionAtLeast("7.7")) TG.disableVerticalSwipes(); // kartochkada pastga surganda yopilmasin
+    if (TG.isVersionAtLeast("6.1")) TG.BackButton.onClick(() => go(""));
   } catch {}
 }
-const S = { topics: [], topic: null, tab: "rule", ex: null, cards: null, drill: null };
+const S = { view: "home", topics: [], topicsStale: false, topic: null, tab: "rule", ex: null, cards: null, drill: null };
 
 function el(tag, attrs = {}, ...kids) {
   const n = document.createElement(tag);
@@ -176,7 +206,7 @@ function inline(text) { // **qalin** ni xavfsiz ko'rsatish
 
 // ---------- yuklash ----------
 function showLocked() {
-  $sel.hidden = true;
+  $hdr.replaceChildren(el("h1", {}, "Rus daftari"));
   $sheet.replaceChildren(el("div", { class: "empty" },
     el("h2", { class: "title" }, "Daftarga kirish"),
     INIT ? el("p", {}, "Sessiya eskirgan. Daftarni yopib, botdan qayta oching.")
@@ -185,41 +215,111 @@ function showLocked() {
 }
 
 async function boot() {
-  if (!S.me) {
-    S.me = await api("/api/me");
-    // Telegram ichida ovoz bilan ishlash har doim ham ishlamaydi: brauzerda ochish imkoniyati
-    if (INIT && S.me.browser_url)
-      document.getElementById("tools").append(el("button", { class: "chip", type: "button",
-        onclick: () => TG.openLink(S.me.browser_url) }, "🌐 Brauzerda"));
-  }
+  // Telegram ma'lumoti URL'ning # qismida keladi; SDK uni o'qib bo'lgan, manzilni tozalaymiz
+  if (/^#?tgWebApp/.test(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+  S.me = await api("/api/me");
   S.topics = await api("/api/topics");
-  $sel.replaceChildren(...S.topics.map(t => el("option", { value: t.slug }, (t.active ? "★ " : "") + t.title)));
+  await route();
+}
+
+// ---------- yo'nalish: "#" — mavzular, "#slug" — mavzu ichi ----------
+const onFail = err => { if (err.message !== "auth") $sheet.replaceChildren(el("p", {}, "Yuklab bo'lmadi: " + err.message)); };
+const routeSlug = () => decodeURIComponent(location.hash.slice(1));
+function go(slug) {
+  if (routeSlug() === slug) route().catch(onFail);
+  else location.hash = slug ? encodeURIComponent(slug) : "";
+}
+async function route() {
+  const slug = routeSlug();
+  if (slug && S.topics.some(t => t.slug === slug)) await openTopic(slug);
+  else await showHome();
+}
+window.addEventListener("hashchange", () => route().catch(onFail));
+
+function renderHeader() {
+  const inTopic = S.view === "topic";
+  // Telegram ichida orqaga qaytish uchun Telegram'ning o'z tugmasi bor
+  const left = inTopic && !INIT
+    ? el("button", { class: "back", type: "button", onclick: () => go("") }, "‹ Mavzular")
+    : el("h1", {}, "Rus daftari");
+  // Telegram ichida ovoz bilan ishlash har doim ham ishlamaydi: brauzerda ochish imkoniyati
+  const right = INIT && S.me && S.me.browser_url
+    ? el("button", { class: "chip", type: "button", onclick: () => TG.openLink(S.me.browser_url) }, "🌐 Brauzerda")
+    : null;
+  $hdr.replaceChildren();
+  add($hdr, left, right);
+  if (INIT && TG.isVersionAtLeast("6.1")) inTopic ? TG.BackButton.show() : TG.BackButton.hide();
+}
+
+// ---------- Bosh sahifa ----------
+async function showHome() {
+  if (S.drill) clearTimeout(S.drill.timer);
+  if (S.topicsStale) { S.topics = await api("/api/topics"); S.topicsStale = false; }
+  S.view = "home"; S.topic = null; keys = null;
+  renderHeader();
   if (!S.topics.length) {
     $sheet.replaceChildren(el("div", { class: "empty" }, el("p", {}, "Hali mavzu yo'q."),
       el("p", { class: "muted" }, "Serverda: python manage.py import topics/01_predlozhny.json --activate")));
     return;
   }
-  const want = location.hash.slice(1);
-  const pick = S.topics.find(t => t.slug === want) || S.topics.find(t => t.active) || S.topics[0];
-  $sel.value = pick.slug;
-  await openTopic(pick.slug);
+  const name = S.me && S.me.first_name;
+  $sheet.replaceChildren(
+    el("h2", { class: "hello" }, name ? `Salom, ${name}!` : "Mavzular"),
+    el("p", { class: "legend muted small" },
+      el("span", {}, el("span", { class: "key l" }), "o'zlashtirildi (3 marta ketma-ket to'g'ri)"),
+      el("span", {}, el("span", { class: "key s" }), "jarayonda")),
+    el("div", { class: "topics" }, S.topics.map(topicCard)));
+  window.scrollTo(0, 0);
 }
-$sel.addEventListener("change", () => openTopic($sel.value));
 
+function topicCard(t) {
+  const n = t.n_items || 0, learned = t.learned || 0, seen = Math.max(t.seen || 0, learned);
+  const pct = n ? Math.round(100 * learned / n) : 0;
+  const w = x => `width:${n ? (100 * x / n).toFixed(2) : 0}%`;
+  const meta = [];
+  if (t.active) meta.push(el("span", { class: "badge" }, "Faol"));
+  if (t.today && t.plan_days) meta.push(el("span", {}, t.today <= t.plan_days ? `Reja: ${t.today}-kun / ${t.plan_days}` : "Reja tugadi"));
+  return el("a", { class: "topic", href: "#" + encodeURIComponent(t.slug) },
+    meta.length ? el("div", { class: "meta" }, meta) : null,
+    el("h3", {}, t.title),
+    el("div", { class: "prog" },
+      el("div", { class: "track", role: "progressbar", "aria-label": "O'zlashtirildi",
+                  "aria-valuemin": "0", "aria-valuemax": "100", "aria-valuenow": String(pct) },
+        el("i", { class: "l", style: w(learned) }), el("i", { class: "s", style: w(seen - learned) })),
+      el("span", { class: "pct" }, pct + "%")),
+    el("div", { class: "foot" }, `${learned} o'zlashtirildi · ${seen - learned} jarayonda · ${n} savol`));
+}
+
+// ---------- Mavzu ichi ----------
 async function openTopic(slug) {
   S.topic = await api("/api/topics/" + encodeURIComponent(slug));
+  S.view = "topic"; S.topicsStale = true;
   S.ex = S.cards = S.drill = null;
-  history.replaceState(null, "", "#" + slug);
-  render();
+  renderHeader(); render(); window.scrollTo(0, 0);
 }
 
-const TABS = [["rule", "Qoida"], ["cards", "Kartochkalar"], ["ex", "Mashq"], ["drill", "Ramka"], ["plan", "7 kun"]];
+const ICONS = {
+  rule: '<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
+  cards: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M4 16V5a2 2 0 0 1 2-2h11"/>',
+  ex: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  drill: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+  plan: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+};
+function icon(name) { // faqat yuqoridagi o'zgarmas ikonkalar
+  const t = document.createElement("template");
+  t.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
+  return t.content.firstChild;
+}
+
+const TABS = [["rule", "Qoida"], ["cards", "Kartalar"], ["ex", "Mashq"], ["drill", "Ramka"], ["plan", "Reja"]];
 function render() {
   const t = S.topic;
   keys = null;
   if (S.tab !== "drill" && S.drill) clearTimeout(S.drill.timer);
-  const nav = el("nav", { class: "tabs", role: "tablist" }, TABS.map(([k, label]) =>
-    el("button", { role: "tab", "aria-selected": String(S.tab === k), onclick: () => { S.tab = k; render(); } }, label)));
+  const nav = el("nav", { class: "tabs", role: "tablist", "aria-label": "Bo'limlar" }, TABS.map(([k, label]) =>
+    el("button", { role: "tab", type: "button", "aria-selected": String(S.tab === k),
+      onclick: () => { S.tab = k; render(); if (window.scrollY > 0) window.scrollTo(0, 0); } },
+      icon(k), el("span", {}, label))));
   const body = el("section", { role: "tabpanel" });
   ({ rule: renderRule, cards: renderCards, ex: renderEx, drill: renderDrill, plan: renderPlan })[S.tab](body);
   $sheet.replaceChildren(el("h2", { class: "title" }, t.title), nav, body);
@@ -376,7 +476,7 @@ function renderPlan(box) {
   if (!t.plan.length) { box.append(el("p", { class: "muted" }, "Bu mavzuda reja yo'q.")); return; }
   if (!t.started_on || !t.active) {
     box.append(el("p", { style: "max-width:52ch" }, t.started_on ? "Bu mavzu hozir faol emas. Faol qilsangiz, bot shu mavzu bo'yicha so'raydi." : "Reja boshlanganda bot har kuni ertalab vazifani yuboradi, kechqurun bajarildimi deb so'raydi."),
-      el("button", { class: "btn primary", onclick: async () => { await api(`/api/topics/${t.slug}/activate`, { restart: false }); await boot(); S.tab = "plan"; render(); } }, t.started_on ? "Faol qilish" : "Bugundan boshlash"));
+      el("button", { class: "btn primary", onclick: async () => { await api(`/api/topics/${t.slug}/activate`, { restart: false }); S.tab = "plan"; await openTopic(t.slug); } }, t.started_on ? "Faol qilish" : "Bugundan boshlash"));
     if (!t.started_on) return;
   }
   const list = el("ol", { class: "days" });
@@ -397,7 +497,7 @@ function renderPlan(box) {
 
 document.addEventListener("keydown", ev => { if (keys && !ev.metaKey && !ev.ctrlKey && !ev.altKey) keys(ev); });
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
-boot().catch(err => { if (err.message !== "auth") $sheet.replaceChildren(el("p", {}, "Yuklab bo'lmadi: " + err.message)); });
+boot().catch(onFail);
 </script>
 </body>
 </html>
