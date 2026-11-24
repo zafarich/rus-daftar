@@ -100,6 +100,8 @@ function el(tag, attrs = {}, ...kids) {
   for (const k of kids.flat()) if (k != null && k !== false) n.append(k instanceof Node ? k : String(k));
   return n;
 }
+// DOM append(null) "null" matnini chiqaradi, shuning uchun bo'shlarini tashlab yuboramiz
+const add = (parent, ...kids) => parent.append(...kids.filter(k => k != null && k !== false));
 async function api(path, body) {
   const r = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
   if (r.status === 401) { location.reload(); throw new Error("auth"); }
@@ -267,7 +269,7 @@ function renderEx(box) {
   if (e.res.pending) { box.append(el("p", { class: "muted" }, "Tekshirilmoqda…")); return; }
   const r = e.res;
   if (r.correct) box.append(el("div", { class: "row" }, el("span", { class: "mark-ok", "aria-label": "To'g'ri" }, "✓"), el("span", { class: "ink" }, r.full)));
-  else box.append(el("div", {}, e.given ? el("div", { class: "wrong" }, e.given) : null, el("div", { class: "ink" }, r.full)),
+  else add(box, el("div", {}, e.given ? el("div", { class: "wrong" }, e.given) : null, el("div", { class: "ink" }, r.full)),
     it.note ? el("div", { class: "note" }, it.note) : null);
   if (r.comment) box.append(el("div", { class: "note" }, r.comment));
   box.append(el("div", { class: "row", style: "margin-top:1rem" }, el("button", { class: "btn primary", onclick: next }, "Keyingisi (Enter)"), speakBtn(r.full)));
@@ -306,7 +308,7 @@ function renderDrill(box) {
     clearTimeout(d.timer); d.timer = setTimeout(show, 2500);
     keys = ev => { if (ev.code === "Space") { ev.preventDefault(); show(); } };
   } else {
-    box.append(el("div", { class: "ink", style: "margin:1rem 0 .5rem" }, full),
+    add(box, el("div", { class: "ink", style: "margin:1rem 0 .5rem" }, full),
       it.note ? el("div", { class: "note" }, it.note) : null,
       el("div", { class: "row", style: "margin-top:.75rem" }, el("button", { class: "btn bad", onclick: () => grade(false) }, "Ulgurmadim (1)"),
         el("button", { class: "btn good", onclick: () => grade(true) }, "Ulgurdim (2)"), speakBtn(full)));
