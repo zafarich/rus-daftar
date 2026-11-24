@@ -90,18 +90,20 @@ Yangilash: `git pull && .venv/bin/pip install -r requirements.txt && sudo system
 
 ## Yangi mavzu qo'shish
 
-1. Claude bilan chatda mavzuni tayyorlaysiz. U sizga `topics/02_....json` fayl beradi.
-2. Faylni serverdagi `topics/` papkasiga qo'yasiz.
+1. Claude bilan chatda mavzuni tayyorlaysiz. U sizga `topics/0N_....json` fayl beradi.
+2. Faylni repo'dagi `topics/` papkasiga qo'yib push qilasiz, serverda `git pull`.
 3. Tekshirib, yuklaysiz:
 
 ```bash
-docker compose exec daftar python manage.py check  topics/02_vinitelny.json
-docker compose exec daftar python manage.py import topics/02_vinitelny.json --activate
+.venv/bin/python manage.py check  topics/02_vinitelny.json
+.venv/bin/python manage.py import topics/02_vinitelny.json
 ```
 
-Mavjud mavzuni tuzatib qayta import qilsangiz, o'zgarmagan savollar bo'yicha hammaning natijasi saqlanib qoladi.
+Mavzu darhol hammaning bosh sahifasida paydo bo'ladi; har kim uni o'zi tanlaydi (daftarda «Reja» → «Bugundan boshlash» yoki botda `/topic vinitelny`). Bot faqat foydalanuvchining faol mavzusidan yangi savol beradi, eski mavzulardan esa takrorlash vaqti kelganlarini aralashtirib turadi.
 
-`--activate` faqat yangi foydalanuvchilarga ta'sir qiladi: mavjudlar yangi mavzuni `/topics` → `/topic slug` yoki daftardagi ro'yxatdan o'zi tanlaydi.
+`--activate` qo'shilsa, mavzu **yangi** foydalanuvchilar uchun boshlang'ich bo'ladi. Odatda birinchi mavzu boshlang'ich bo'lib qolgani ma'qul.
+
+Mavjud mavzuni tuzatib qayta import qilsangiz, o'zgarmagan savollar bo'yicha hammaning natijasi saqlanib qoladi.
 
 Boshqa buyruqlar:
 
