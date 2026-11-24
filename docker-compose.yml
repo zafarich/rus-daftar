@@ -1,0 +1,10 @@
+services:
+  daftar:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:8000:8000"   # tashqariga nginx/caddy orqali chiqadi
+    volumes:
+      - ./data:/srv/data         # baza shu yerda saqlanadi
+      - ./topics:/srv/topics     # mavzu fayllari

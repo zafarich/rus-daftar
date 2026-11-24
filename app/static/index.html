@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rus daftari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F8FB; --grid:#DFE7EF; --sheet:#FFFFFF; --ink:#1C3D8F; --ink-soft:#5470B3;
+  --red:#C42B3A; --green:#24774A; --text:#23272E; --muted:#5D6672; --line:#CCD6E1;
+  --font:"Golos Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --hand:"Caveat", "Segoe Print", "Bradley Hand", cursive;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --paper:#12171E; --grid:#1E2631; --sheet:#171D26; --ink:#93B4FF; --ink-soft:#7390D8;
+    --red:#FF7C86; --green:#6FD39A; --text:#E5E9EF; --muted:#9AA4B2; --line:#2C3644; color-scheme:dark; }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);color:var(--text);background:var(--paper);font-size:17px;line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+header{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  max-width:820px;margin:0 auto;padding:1rem 1.25rem .5rem}
+header h1{font-size:1.15rem;font-weight:600;margin:0;letter-spacing:-.01em}
+select{font:inherit;background:var(--sheet);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;max-width:100%}
+.sheet{max-width:820px;margin:0 auto 3rem;background-color:var(--sheet);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;border-left:3px solid var(--red);min-height:70vh;padding:1.25rem 1.5rem 2.5rem 2rem}
+.title{font-size:1.5rem;font-weight:600;line-height:1.25;margin:.25rem 0 1rem;max-width:34ch}
+nav.tabs{display:flex;gap:1.25rem;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:1.5rem}
+nav.tabs button{background:none;border:0;padding:.4rem 0;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+nav.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ink);font-weight:500}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.btn{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:.5rem .9rem}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.btn.good{border-color:var(--green);color:var(--green)}
+.btn.bad{border-color:var(--red);color:var(--red)}
+.btn:disabled{opacity:.5;cursor:default}
+.chip{background:none;border:1px solid var(--line);border-radius:999px;padding:.2rem .75rem;font-size:.875rem;color:var(--muted)}
+.chip[aria-pressed=true]{border-color:var(--ink);color:var(--ink)}
+.rule h3{font-size:1.05rem;margin:1.5rem 0 .35rem}
+.rule p,.rule ul{margin:.25rem 0;max-width:62ch}
+.rule ul{padding-left:1.2rem}
+.prompt{font-size:1.6rem;line-height:1.35;margin:1rem 0 1.25rem;font-weight:500}
+.blank{display:inline-block;min-width:3.2ch;border-bottom:2px solid var(--ink-soft);margin:0 .15em}
+.ink{font-family:var(--hand);color:var(--ink);font-size:2.1rem;line-height:1.15;font-weight:700}
+.wrong{font-family:var(--hand);color:var(--red);font-size:1.8rem;text-decoration:line-through;text-decoration-thickness:2px}
+.mark-ok{color:var(--green);font-family:var(--hand);font-size:2rem;font-weight:700}
+.note{border-left:2px solid var(--red);padding-left:.6rem;margin:.6rem 0;color:var(--muted);max-width:56ch}
+input.answer{font:inherit;font-size:1.25rem;width:100%;max-width:28rem;padding:.55rem .7rem;
+  background:var(--sheet);color:var(--text);border:1px solid var(--line);border-radius:6px}
+.counter{font-variant-numeric:tabular-nums}
+.card{min-height:13rem;padding:1.5rem 0;cursor:pointer;user-select:none}
+.bar{height:4px;background:var(--line);max-width:28rem;margin:.5rem 0 1rem;overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--ink);width:100%;transform-origin:left}
+.bar.run > i{animation:shrink var(--dur,2.5s) linear forwards}
+@keyframes shrink{to{transform:scaleX(0)}}
+.days{list-style:none;padding:0;margin:0}
+.days li{padding:.8rem 0 .9rem;border-bottom:1px dashed var(--line)}
+.days li.today{border-left:3px solid var(--ink);padding-left:.8rem;margin-left:-.95rem}
+.days h4{margin:0 0 .25rem;font-size:1rem;font-weight:600}
+.days ul{margin:.25rem 0 .5rem;padding-left:1.2rem;max-width:60ch}
+.status-done{color:var(--green)} .status-missed{color:var(--red)}
+.empty{padding:2rem 0;max-width:40ch}
+@media (max-width:560px){ .sheet{padding:1rem 1rem 2rem 1.25rem} .prompt{font-size:1.35rem} }
+@media (prefers-reduced-motion:reduce){ .bar.run > i{animation-duration:.01s} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Rus daftari</h1>
+  <select id="topicSel" aria-label="Mavzu"></select>
+</header>
+<main class="sheet" id="sheet"><p class="muted">Yuklanmoqda…</p></main>
+
+<script>
+"use strict";
+let keys = null;
+const $sheet = document.getElementById("sheet");
+const $sel = document.getElementById("topicSel");
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const S = { topics: [], topic: null, tab: "rule", ex: null, cards: null, drill: null };
+
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if (v === true) n.setAttribute(k, "");
+    else if (v !== false && v != null) n.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) n.append(k instanceof Node ? k : String(k));
+  return n;
+}
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
+  if (r.status === 401) { location.reload(); throw new Error("auth"); }
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  return r.json();
+}
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const fill = (p, a) => p.replace("___", a);
+const fullOf = it => it.prompt.includes("___") ? fill(it.prompt, it.answers[0]) : it.answers[0];
+
+function speak(text) {
+  if (!("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ru-RU"; u.rate = 0.9;
+  const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith("ru"));
+  if (v) u.voice = v;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+const speakBtn = text => ("speechSynthesis" in window) ? el("button", { class: "btn", type: "button", "aria-label": "Eshitish", onclick: () => speak(text) }, "🔊 Eshitish") : null;
+
+function promptNode(text) {
+  const n = el("div", { class: "prompt" });
+  text.split("___").forEach((part, i) => { if (i) n.append(el("span", { class: "blank", "aria-label": "bo'sh joy" }, " ")); n.append(part); });
+  return n;
+}
+function inline(text) { // **qalin** ni xavfsiz ko'rsatish
+  const frag = document.createDocumentFragment();
+  text.split(/(\*\*[^*]+\*\*)/g).forEach(p => frag.append(p.startsWith("**") && p.endsWith("**") ? el("strong", {}, p.slice(2, -2)) : p));
+  return frag;
+}
+
+// ---------- yuklash ----------
+async function boot() {
+  S.topics = await api("/api/topics");
+  $sel.replaceChildren(...S.topics.map(t => el("option", { value: t.slug }, (t.active ? "★ " : "") + t.title)));
+  if (!S.topics.length) {
+    $sheet.replaceChildren(el("div", { class: "empty" }, el("p", {}, "Hali mavzu yo'q."),
+      el("p", { class: "muted" }, "Serverda: python manage.py import topics/01_predlozhny.json --activate")));
+    return;
+  }
+  const want = location.hash.slice(1);
+  const pick = S.topics.find(t => t.slug === want) || S.topics.find(t => t.active) || S.topics[0];
+  $sel.value = pick.slug;
+  await openTopic(pick.slug);
+}
+$sel.addEventListener("change", () => openTopic($sel.value));
+
+async function openTopic(slug) {
+  S.topic = await api("/api/topics/" + encodeURIComponent(slug));
+  S.ex = S.cards = S.drill = null;
+  history.replaceState(null, "", "#" + slug);
+  render();
+}
+
+const TABS = [["rule", "Qoida"], ["cards", "Kartochkalar"], ["ex", "Mashq"], ["drill", "Ramka"], ["plan", "7 kun"]];
+function render() {
+  const t = S.topic;
+  keys = null;
+  if (S.tab !== "drill" && S.drill) clearTimeout(S.drill.timer);
+  const nav = el("nav", { class: "tabs", role: "tablist" }, TABS.map(([k, label]) =>
+    el("button", { role: "tab", "aria-selected": String(S.tab === k), onclick: () => { S.tab = k; render(); } }, label)));
+  const body = el("section", { role: "tabpanel" });
+  ({ rule: renderRule, cards: renderCards, ex: renderEx, drill: renderDrill, plan: renderPlan })[S.tab](body);
+  $sheet.replaceChildren(el("h2", { class: "title" }, t.title), nav, body);
+}
+
+// ---------- Qoida ----------
+function renderRule(box) {
+  const wrap = el("div", { class: "rule" });
+  let ul = null;
+  for (const raw of (S.topic.summary || "").split("\n")) {
+    const line = raw.trim();
+    if (!line) { ul = null; continue; }
+    if (line.startsWith("## ")) { ul = null; wrap.append(el("h3", {}, line.slice(3))); }
+    else if (line.startsWith("- ")) { if (!ul) { ul = el("ul"); wrap.append(ul); } ul.append(el("li", {}, inline(line.slice(2)))); }
+    else { ul = null; wrap.append(el("p", {}, inline(line))); }
+  }
+  box.append(wrap);
+}
+
+// ---------- Kartochkalar ----------
+function renderCards(box) {
+  const all = S.topic.items.filter(i => i.kind === "card");
+  if (!all.length) { box.append(el("p", { class: "muted" }, "Bu mavzuda kartochka yo'q.")); return; }
+  if (!S.cards) S.cards = { deck: shuffle(all), i: 0, flipped: false, ok: 0, missed: [] };
+  const c = S.cards;
+  if (c.i >= c.deck.length) {
+    box.append(el("p", {}, `Hammasi aylantirildi. Bildingiz: ${c.ok}/${c.deck.length}.`),
+      el("div", { class: "row" },
+        c.missed.length ? el("button", { class: "btn primary", onclick: () => { S.cards = { deck: shuffle(c.missed), i: 0, flipped: false, ok: 0, missed: [] }; render(); } }, `Bilmaganlarimni qayta (${c.missed.length})`) : null,
+        el("button", { class: "btn", onclick: () => { S.cards = null; render(); } }, "Hammasini qaytadan")));
+    return;
+  }
+  const it = c.deck[c.i];
+  const flip = () => { c.flipped = true; render(); speak(it.answers[0]); };
+  const grade = async ok => { if (ok) c.ok++; else c.missed.push(it); c.i++; c.flipped = false; render(); api("/api/review", { item_id: it.id, correct: ok }).catch(() => {}); };
+  box.append(el("p", { class: "muted small counter" }, `${c.i + 1} / ${c.deck.length}`),
+    el("div", { class: "card", tabindex: "0", role: "button", "aria-label": "Ag'darish", onclick: () => !c.flipped && flip() },
+      el("div", { class: "prompt" }, it.prompt),
+      c.flipped ? el("div", { class: "ink" }, it.answers[0]) : el("div", { class: "muted small" }, "Ruschasini ovoz chiqarib ayting, keyin ag'daring (bo'sh joy tugmasi)."),
+      c.flipped && it.note ? el("div", { class: "note" }, it.note) : null),
+    c.flipped
+      ? el("div", { class: "row" }, el("button", { class: "btn bad", onclick: () => grade(false) }, "Bilmadim (1)"),
+          el("button", { class: "btn good", onclick: () => grade(true) }, "Bildim (2)"), speakBtn(it.answers[0]))
+      : el("button", { class: "btn primary", onclick: flip }, "Ag'darish"));
+  keys = e => { if (e.target.tagName === "INPUT") return; if (e.code === "Space") { e.preventDefault(); if (!c.flipped) flip(); } else if (c.flipped && e.key === "1") grade(false); else if (c.flipped && e.key === "2") grade(true); };
+}
+
+// ---------- Mashq ----------
+const EX_KINDS = [["all", "Hammasi"], ["gap", "Predlog"], ["ending", "Qo'shimcha"], ["choice", "Tanlash"], ["translate", "Tarjima"], ["sentence", "To'liq gap"]];
+const EX_LABEL = { gap: "Bo'sh joyni to'ldiring", ending: "Qo'shimchani yozing", choice: "To'g'ri variantni tanlang", translate: "Ruschaga tarjima qiling", sentence: "To'liq gap yozing" };
+function newEx(filter) {
+  const kinds = filter === "all" ? ["gap", "ending", "choice", "translate", "sentence"] : [filter];
+  S.ex = { filter, queue: shuffle(S.topic.items.filter(i => kinds.includes(i.kind))), i: 0, ok: 0, res: null, given: "", wrong: [] };
+}
+function renderEx(box) {
+  if (!S.ex) newEx("all");
+  const e = S.ex;
+  box.append(el("div", { class: "row", style: "margin-bottom:1rem" }, EX_KINDS.map(([k, label]) =>
+    el("button", { class: "chip", "aria-pressed": String(e.filter === k), onclick: () => { newEx(k); render(); } }, label))));
+  if (!e.queue.length) { box.append(el("p", { class: "muted" }, "Bu turda mashq yo'q.")); return; }
+  if (e.i >= e.queue.length) {
+    box.append(el("p", {}, `Tugadi: ${e.ok}/${e.queue.length} to'g'ri.`),
+      el("div", { class: "row" },
+        e.wrong.length ? el("button", { class: "btn primary", onclick: () => { S.ex = { ...e, queue: shuffle(e.wrong), i: 0, ok: 0, res: null, wrong: [] }; render(); } }, `Xatolarni qayta (${e.wrong.length})`) : null,
+        el("button", { class: "btn", onclick: () => { newEx(e.filter); render(); } }, "Qaytadan")));
+    return;
+  }
+  const it = e.queue[e.i];
+  box.append(el("p", { class: "muted small counter" }, `${e.i + 1} / ${e.queue.length} · ${EX_LABEL[it.kind]}`), promptNode(it.prompt));
+
+  const submit = async answer => {
+    if (e.res) return;
+    e.given = answer;
+    e.res = { pending: true }; render();
+    try { e.res = await api("/api/check", { item_id: it.id, answer }); }
+    catch (err) { e.res = null; alert("Xato: " + err.message); render(); return; }
+    if (e.res.correct) e.ok++; else e.wrong.push(it);
+    render(); speak(e.res.full);
+  };
+  const next = () => { e.i++; e.res = null; e.given = ""; render(); };
+
+  if (!e.res) {
+    if (it.kind === "choice") {
+      box.append(el("div", { class: "row" }, it.options.map((o, n) => el("button", { class: "btn", onclick: () => submit(o) }, `${o} (${n + 1})`))));
+      keys = ev => { const n = Number(ev.key) - 1; if (it.options[n] != null) submit(it.options[n]); };
+    } else {
+      const inp = el("input", { class: "answer", lang: "ru", autocomplete: "off", autocapitalize: "off", spellcheck: "false", "aria-label": "Javob", placeholder: it.kind === "ending" ? "qo'shimcha yoki butun so'z" : "javob" });
+      inp.addEventListener("keydown", ev => { if (ev.key === "Enter" && inp.value.trim()) submit(inp.value); });
+      const mic = SR ? el("button", { class: "btn", type: "button", onclick: () => {
+        const r = new SR(); r.lang = "ru-RU"; r.interimResults = false;
+        r.onresult = ev => { inp.value = ev.results[0][0].transcript; inp.focus(); };
+        r.start();
+      } }, "🎤 Aytish") : null;
+      box.append(el("div", { class: "row" }, inp),
+        el("div", { class: "row", style: "margin-top:.75rem" },
+          el("button", { class: "btn primary", onclick: () => inp.value.trim() && submit(inp.value) }, "Tekshirish"), mic,
+          el("button", { class: "btn", onclick: () => submit("") }, "Bilmayman")));
+      if (it.hint) box.append(el("p", { class: "muted small" }, "Yordam: " + it.hint));
+      setTimeout(() => inp.focus(), 0);
+      keys = null;
+    }
+    return;
+  }
+  if (e.res.pending) { box.append(el("p", { class: "muted" }, "Tekshirilmoqda…")); return; }
+  const r = e.res;
+  if (r.correct) box.append(el("div", { class: "row" }, el("span", { class: "mark-ok", "aria-label": "To'g'ri" }, "✓"), el("span", { class: "ink" }, r.full)));
+  else box.append(el("div", {}, e.given ? el("div", { class: "wrong" }, e.given) : null, el("div", { class: "ink" }, r.full)),
+    it.note ? el("div", { class: "note" }, it.note) : null);
+  if (r.comment) box.append(el("div", { class: "note" }, r.comment));
+  box.append(el("div", { class: "row", style: "margin-top:1rem" }, el("button", { class: "btn primary", onclick: next }, "Keyingisi (Enter)"), speakBtn(r.full)));
+  keys = ev => { if (ev.key === "Enter") next(); };
+}
+
+// ---------- Ramka (tezkor) ----------
+function renderDrill(box) {
+  const items = S.topic.items.filter(i => i.kind === "drill");
+  if (!items.length) { box.append(el("p", { class: "muted" }, "Bu mavzuda ramka mashqi yo'q.")); return; }
+  const frames = [...new Map(items.map(i => [i.prompt, i.extra.title || i.prompt])).entries()];
+  if (!S.drill) {
+    box.append(el("p", { class: "muted", style: "max-width:58ch" }, "Ramka bir xil qoladi, faqat so'z almashadi. So'zni ko'rgan zahoti butun gapni ovoz chiqarib ayting. 2,5 soniyadan keyin javob ochiladi."),
+      el("div", { class: "row" }, frames.map(([p, title]) => el("button", { class: "btn", onclick: () => {
+        S.drill = { frame: p, queue: shuffle(items.filter(i => i.prompt === p)), i: 0, ok: 0, shown: false }; render();
+      } }, title))));
+    return;
+  }
+  const d = S.drill;
+  if (d.i >= d.queue.length) {
+    box.append(el("p", {}, `Aylana tugadi: ${d.ok}/${d.queue.length} ulgurdingiz.`),
+      el("div", { class: "row" }, el("button", { class: "btn primary", onclick: () => { S.drill = { ...d, queue: shuffle(d.queue), i: 0, ok: 0, shown: false }; render(); } }, "Yana bir aylana"),
+        el("button", { class: "btn", onclick: () => { S.drill = null; render(); } }, "Boshqa ramka")));
+    return;
+  }
+  const it = d.queue[d.i];
+  const full = fill(it.prompt, it.answers[0]);
+  const show = () => { if (d.shown) return; d.shown = true; clearTimeout(d.timer); render(); speak(full); };
+  const grade = ok => { if (ok) d.ok++; d.i++; d.shown = false; render(); api("/api/review", { item_id: it.id, correct: ok }).catch(() => {}); };
+  box.append(el("p", { class: "muted small counter" }, `${d.i + 1} / ${d.queue.length}`), promptNode(it.prompt),
+    el("p", { style: "font-size:1.25rem;margin:0" }, `${it.extra.uz || ""} → `, el("strong", {}, it.extra.base || "")));
+  if (!d.shown) {
+    const bar = el("div", { class: "bar" }, el("i"));
+    box.append(bar, el("button", { class: "btn", onclick: show }, "Javobni ko'rsatish (bo'sh joy)"));
+    requestAnimationFrame(() => bar.classList.add("run"));
+    clearTimeout(d.timer); d.timer = setTimeout(show, 2500);
+    keys = ev => { if (ev.code === "Space") { ev.preventDefault(); show(); } };
+  } else {
+    box.append(el("div", { class: "ink", style: "margin:1rem 0 .5rem" }, full),
+      it.note ? el("div", { class: "note" }, it.note) : null,
+      el("div", { class: "row", style: "margin-top:.75rem" }, el("button", { class: "btn bad", onclick: () => grade(false) }, "Ulgurmadim (1)"),
+        el("button", { class: "btn good", onclick: () => grade(true) }, "Ulgurdim (2)"), speakBtn(full)));
+    keys = ev => { if (ev.key === "1") grade(false); else if (ev.key === "2") grade(true); };
+  }
+}
+
+// ---------- 7 kun ----------
+function renderPlan(box) {
+  const t = S.topic;
+  if (!t.plan.length) { box.append(el("p", { class: "muted" }, "Bu mavzuda reja yo'q.")); return; }
+  if (!t.started_on || !t.active) {
+    box.append(el("p", { style: "max-width:52ch" }, t.started_on ? "Bu mavzu hozir faol emas. Faol qilsangiz, bot shu mavzu bo'yicha so'raydi." : "Reja boshlanganda bot har kuni ertalab vazifani yuboradi, kechqurun bajarildimi deb so'raydi."),
+      el("button", { class: "btn primary", onclick: async () => { await api(`/api/topics/${t.slug}/activate`, { restart: false }); await boot(); S.tab = "plan"; render(); } }, t.started_on ? "Faol qilish" : "Bugundan boshlash"));
+    if (!t.started_on) return;
+  }
+  const list = el("ol", { class: "days" });
+  t.plan.forEach((day, idx) => {
+    const n = idx + 1, st = t.log[n], isToday = n === t.today;
+    const mark = st === "done" ? el("span", { class: "status-done" }, " ✓ bajarildi") : st === "missed" ? el("span", { class: "status-missed" }, " ✗ bajarilmadi") : null;
+    const set = async status => { t.log = await api("/api/plan", { slug: t.slug, day: n, status }); render(); };
+    list.append(el("li", { class: isToday ? "today" : "" },
+      el("h4", {}, `${n}-kun`, isToday ? el("span", { class: "muted" }, " · bugun") : null, mark),
+      el("ul", {}, day.tasks.map(x => el("li", {}, x))),
+      t.today && n <= t.today ? el("div", { class: "row" },
+        el("button", { class: "btn good", "aria-pressed": String(st === "done"), onclick: () => set("done") }, "Bajarildi"),
+        el("button", { class: "btn bad", "aria-pressed": String(st === "missed"), onclick: () => set("missed") }, "Bajarilmadi")) : null));
+  });
+  box.append(list, el("p", { class: "small", style: "margin-top:1.5rem" },
+    el("button", { class: "chip", onclick: async () => { if (!confirm("7 kunlik reja bugundan qaytadan boshlansinmi? Belgilar o'chadi.")) return; await api(`/api/topics/${t.slug}/activate`, { restart: true }); await openTopic(t.slug); } }, "Rejani qaytadan boshlash")));
+}
+
+document.addEventListener("keydown", ev => { if (keys && !ev.metaKey && !ev.ctrlKey && !ev.altKey) keys(ev); });
+if ("speechSynthesis" in window) speechSynthesis.getVoices();
+boot().catch(err => $sheet.replaceChildren(el("p", {}, "Yuklab bo'lmadi: " + err.message)));
+</script>
+</body>
+</html>
