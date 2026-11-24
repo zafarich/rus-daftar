@@ -9,19 +9,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F5F8FB; --grid:#DFE7EF; --sheet:#FFFFFF; --ink:#1C3D8F; --ink-soft:#5470B3;
+  --sheet:#FFFFFF; --ink:#1C3D8F; --ink-soft:#5470B3;
   --red:#C42B3A; --green:#24774A; --text:#23272E; --muted:#5D6672; --line:#CCD6E1;
   --font:"Golos Text", "Segoe UI", system-ui, -apple-system, sans-serif;
   --hand:"Caveat", "Segoe Print", "Bradley Hand", cursive;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
-  :root{ --paper:#12171E; --grid:#1E2631; --sheet:#171D26; --ink:#93B4FF; --ink-soft:#7390D8;
+  :root{ --sheet:#171D26; --ink:#93B4FF; --ink-soft:#7390D8;
     --red:#FF7C86; --green:#6FD39A; --text:#E5E9EF; --muted:#9AA4B2; --line:#2C3644; color-scheme:dark; }
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{font-family:var(--font);color:var(--text);background:var(--paper);font-size:17px;line-height:1.5;
+body{font-family:var(--font);color:var(--text);background:var(--sheet);font-size:17px;line-height:1.5;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -29,9 +29,7 @@ header{display:flex;gap:1rem;align-items:center;justify-content:space-between;fl
   max-width:820px;margin:0 auto;padding:1rem 1.25rem .5rem}
 header h1{font-size:1.15rem;font-weight:600;margin:0;letter-spacing:-.01em}
 select{font:inherit;background:var(--sheet);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:.35rem .5rem;max-width:100%}
-.sheet{max-width:820px;margin:0 auto 3rem;background-color:var(--sheet);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:24px 24px;border-left:3px solid var(--red);min-height:70vh;padding:1.25rem 1.5rem 2.5rem 2rem}
+.sheet{max-width:820px;margin:0 auto 3rem;background:var(--sheet);border-left:3px solid var(--red);min-height:70vh;padding:1.25rem 1.5rem 2.5rem 2rem}
 .title{font-size:1.5rem;font-weight:600;line-height:1.25;margin:.25rem 0 1rem;max-width:34ch}
 nav.tabs{display:flex;gap:1.25rem;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:1.5rem}
 nav.tabs button{background:none;border:0;padding:.4rem 0;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -112,12 +110,38 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const fill = (p, a) => p.replace("___", a);
 const fullOf = it => it.prompt.includes("___") ? fill(it.prompt, it.answers[0]) : it.answers[0];
 
-function speak(text) {
+// Mikrofon yopilganda qurilma audio rejimini almashtiradi (Bluetooth quloqchin, Android, iOS).
+// Shu payt boshlangan o'qish o'rtasida uziladi, shuning uchun mikrofon to'liq yopilib,
+// MIC_SETTLE_MS o'tgandan keyingina gapiramiz.
+const MIC_SETTLE_MS = 800;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const mic = { busy: null, endedAt: 0 };
+let speakSeq = 0;
+let curUtt = null; // Chrome o'qilayotgan utterance'ni xotiradan tozalab, ovozni uzmasligi uchun
+
+function listen(onText) {
+  if ("speechSynthesis" in window) speechSynthesis.cancel(); // mikrofon o'z ovozimizni eshitmasin
+  const r = new SR(); r.lang = "ru-RU"; r.interimResults = false; r.maxAlternatives = 1;
+  let done;
+  mic.busy = new Promise(res => { done = () => { mic.endedAt = Date.now(); mic.busy = null; res(); }; });
+  r.onresult = ev => { onText(ev.results[0][0].transcript); r.stop(); };
+  r.onend = done;
+  try { r.start(); } catch { done(); }
+}
+
+async function speak(text) {
   if (!("speechSynthesis" in window)) return;
+  const seq = ++speakSeq;
+  if (mic.busy) await Promise.race([mic.busy, sleep(8000)]);
+  const wait = mic.endedAt + MIC_SETTLE_MS - Date.now();
+  if (wait > 0) await sleep(wait);
+  if (seq !== speakSeq) return; // kutish paytida boshqa matn o'qishga berildi
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "ru-RU"; u.rate = 0.9;
   const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith("ru"));
   if (v) u.voice = v;
+  u.onend = u.onerror = () => { if (curUtt === u) curUtt = null; };
+  curUtt = u;
   speechSynthesis.cancel(); speechSynthesis.speak(u);
 }
 const speakBtn = text => ("speechSynthesis" in window) ? el("button", { class: "btn", type: "button", "aria-label": "Eshitish", onclick: () => speak(text) }, "🔊 Eshitish") : null;
@@ -251,14 +275,11 @@ function renderEx(box) {
     } else {
       const inp = el("input", { class: "answer", lang: "ru", autocomplete: "off", autocapitalize: "off", spellcheck: "false", "aria-label": "Javob", placeholder: it.kind === "ending" ? "qo'shimcha yoki butun so'z" : "javob" });
       inp.addEventListener("keydown", ev => { if (ev.key === "Enter" && inp.value.trim()) submit(inp.value); });
-      const mic = SR ? el("button", { class: "btn", type: "button", onclick: () => {
-        const r = new SR(); r.lang = "ru-RU"; r.interimResults = false;
-        r.onresult = ev => { inp.value = ev.results[0][0].transcript; inp.focus(); };
-        r.start();
-      } }, "🎤 Aytish") : null;
+      const micBtn = SR ? el("button", { class: "btn", type: "button", onclick: () =>
+        listen(text => { inp.value = text; inp.focus(); }) }, "🎤 Aytish") : null;
       box.append(el("div", { class: "row" }, inp),
         el("div", { class: "row", style: "margin-top:.75rem" },
-          el("button", { class: "btn primary", onclick: () => inp.value.trim() && submit(inp.value) }, "Tekshirish"), mic,
+          el("button", { class: "btn primary", onclick: () => inp.value.trim() && submit(inp.value) }, "Tekshirish"), micBtn,
           el("button", { class: "btn", onclick: () => submit("") }, "Bilmayman")));
       if (it.hint) box.append(el("p", { class: "muted small" }, "Yordam: " + it.hint));
       setTimeout(() => inp.focus(), 0);
