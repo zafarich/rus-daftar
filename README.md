@@ -3,7 +3,7 @@
 Bitta konteynerda ikki narsa ishlaydi:
 
 - **Telegram bot.** Kuniga bir necha marta o'zi savol yuboradi (so'z, predlog, qo'shimcha, to'liq gap, tanlash), javobingizni tekshiradi va keyingisiga o'tadi. Ertalab 7 kunlik rejaning bugungi vazifasini yuboradi, kechqurun «Bajarildimi?» deb so'raydi.
-- **Veb-daftar** (`https://DOMAIN`) — Telegram Mini App sifatida bot ichida ochiladi, brauzerda ham ishlaydi. Bo'limlar: qoida (jadval, misol va chizmalar bilan), flip kartochkalar, mashq (predlog / qo'shimcha / tanlash / xatoni topish / tarjima / to'liq gap, alohida «Xatolarim» ro'yxati), tezkor «ramka» mashqi va 7 kunlik reja. Ruscha javobni ovoz chiqarib o'qiydi, Chrome'da javobni ovoz bilan aytish ham mumkin.
+- **Veb-daftar** (`https://DOMAIN`) — Telegram Mini App sifatida bot ichida ochiladi, brauzerda ham ishlaydi. Bo'limlar: qoida (jadval, misol va chizmalar bilan), flip kartochkalar, mashq (bo'sh joy / qo'shimcha / tanlash / xatoni topish / tarjima / to'liq gap, alohida «Xatolarim» ro'yxati), tezkor «ramka» mashqi va 7 kunlik reja. Ruscha javobni ovoz chiqarib o'qiydi, Chrome'da javobni ovoz bilan aytish ham mumkin.
 
 Xato qilingan savol 10 daqiqadan keyin, to'g'ri topilgani esa 1, 2, 4, 8… kundan keyin qaytadi (Leitner takrorlash usuli).
 
@@ -198,8 +198,11 @@ Chizma belgilari (quti — joy, nuqta — siz, odam shakli — boshqa kishi, str
 | `front` | oldida | перед домом |
 | `behind` | orqasida | за домом |
 | `between` | orasida | между домом и парком |
+| `one` | bitta | один стол |
+| `few` | ikki, uch, to'rt | два стола |
+| `many` | ko'p | пять столов |
 
-Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/05_tvoritelny.json`.
+Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/06_koplik.json`.
 
 ## Zaxira nusxa
 

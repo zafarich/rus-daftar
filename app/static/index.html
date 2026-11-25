@@ -391,6 +391,9 @@ const PICS = {
   front: '<rect x="24" y="5" width="28" height="28" rx="5"/><circle class="o" cx="24" cy="31" r="6"/>',
   behind: '<circle class="f" cx="35" cy="12" r="6"/><rect class="bg" x="13" y="12" width="28" height="28" rx="5"/>',
   between: '<rect x="4" y="10" width="16" height="24" rx="4"/><rect x="44" y="10" width="16" height="24" rx="4"/><circle class="f" cx="32" cy="22" r="5"/>',
+  one: '<circle class="f" cx="32" cy="22" r="5"/>',
+  few: '<circle class="f" cx="16" cy="22" r="5"/><circle class="f" cx="32" cy="22" r="5"/><circle class="f" cx="48" cy="22" r="5"/>',
+  many: '<circle class="f" cx="11" cy="12" r="4.5"/><circle class="f" cx="25" cy="12" r="4.5"/><circle class="f" cx="39" cy="12" r="4.5"/><circle class="f" cx="53" cy="12" r="4.5"/><circle class="f" cx="11" cy="32" r="4.5"/><circle class="f" cx="25" cy="32" r="4.5"/><circle class="f" cx="39" cy="32" r="4.5"/><circle class="f" cx="53" cy="32" r="4.5"/>',
 };
 function pic(name) {
   const t = document.createElement("template");
@@ -473,7 +476,7 @@ function renderCards(box) {
 }
 
 // ---------- Mashq ----------
-const EX_KINDS = [["all", "Hammasi"], ["weak", "Xatolarim"], ["gap", "Predlog"], ["ending", "Qo'shimcha"], ["choice", "Tanlash"], ["fix", "Xatoni topish"], ["translate", "Tarjima"], ["sentence", "To'liq gap"]];
+const EX_KINDS = [["all", "Hammasi"], ["weak", "Xatolarim"], ["gap", "Bo'sh joy"], ["ending", "Qo'shimcha"], ["choice", "Tanlash"], ["fix", "Xatoni topish"], ["translate", "Tarjima"], ["sentence", "To'liq gap"]];
 const EX_LABEL = { gap: "Bo'sh joyni to'ldiring", ending: "Qo'shimchani yozing", choice: "To'g'ri variantni tanlang", fix: "Gapda xato bor, to'g'rilab yozing", translate: "Ruschaga tarjima qiling", sentence: "To'liq gap yozing" };
 const EX_ALL = ["gap", "ending", "choice", "fix", "translate", "sentence"];
 // box === 0: oxirgi javob xato bo'lgan savol (botda yoki daftarda)
