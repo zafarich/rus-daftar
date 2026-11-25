@@ -16,7 +16,7 @@ from . import config
 
 log = logging.getLogger(__name__)
 
-KINDS = ("card", "translate", "gap", "ending", "choice", "sentence", "drill")
+KINDS = ("card", "translate", "gap", "ending", "choice", "sentence", "drill", "fix")
 # Leitner: xato -> 0-quti (10 daqiqadan keyin qaytadi), to'g'ri -> keyingi quti
 INTERVALS = [timedelta(minutes=10), timedelta(days=1), timedelta(days=2),
              timedelta(days=4), timedelta(days=8), timedelta(days=16), timedelta(days=32)]
@@ -210,6 +210,8 @@ def _items_from(data: dict) -> list[dict]:
             raise TopicError(f"{kind}: «{prompt}» uchun javob yo'q")
         if kind in ("gap", "ending", "drill") and "___" not in prompt:
             raise TopicError(f"{kind}: «{prompt}» ichida ___ yo'q")
+        if kind == "fix" and any(a.casefold() == prompt.casefold() for a in answers):
+            raise TopicError(f"fix: «{prompt}» — javob xato gapning o'zi bilan bir xil")
         if kind == "choice":
             if not options or len(options) < 2:
                 raise TopicError(f"choice: «{prompt}» uchun kamida 2 ta variant kerak")
@@ -237,6 +239,9 @@ def import_topic(data: dict, activate: bool = False) -> dict:
     if not title:
         raise TopicError("title yo'q")
     items = _items_from(data)
+    summary = data.get("summary", "")
+    if isinstance(summary, list):   # faylda qoida satrma-satr yozilgan bo'lishi mumkin
+        summary = "\n".join(summary)
     plan = data.get("plan", [])
     for i, d in enumerate(plan):
         if not isinstance(d.get("tasks"), list) or not d["tasks"]:
@@ -256,7 +261,7 @@ def import_topic(data: dict, activate: bool = False) -> dict:
                 "VALUES(?,?,?,?,?,?,?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, "
                 "summary=excluded.summary, plan_json=excluded.plan_json, sort=excluded.sort, "
                 "updated_at=excluded.updated_at",
-                (slug, title, data.get("summary", ""), json.dumps(plan, ensure_ascii=False),
+                (slug, title, summary, json.dumps(plan, ensure_ascii=False),
                  int(data.get("sort", 0)), ts, ts))
             tid = c.execute("SELECT id FROM topics WHERE slug=?", (slug,)).fetchone()[0]
             for pos, (it, k) in enumerate(zip(items, keys)):

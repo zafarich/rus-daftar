@@ -47,6 +47,7 @@ KIND_LABEL = {
     "gap": "🧩 Bo'sh joyni to'ldiring",
     "ending": "🔚 Qo'shimchani yozing",
     "choice": "☑️ To'g'ri variantni tanlang",
+    "fix": "🛠 Gapda xato bor. To'g'risini yozing",
     "drill": "⚡️ Tez ayting (2 soniyada!)",
 }
 
@@ -252,9 +253,14 @@ async def cmd_hint(m: Message, uid: int):
     if not it:
         await m.answer("Hozir savol yo'q.")
         return
-    tips = [x for x in (it.get("hint"), it.get("note")) if x]
     a = it["answers"][0]
-    tips.append(f"Javob {len(a)} belgidan iborat, «{a[0]}…» bilan boshlanadi.")
+    if it["kind"] == "fix":   # izoh javobni ochib qo'yadi, shuning uchun faqat xato joyi aytiladi
+        fw = checker.fixed_words(it["prompt"], a)
+        tips = [it["hint"]] if it.get("hint") else []
+        tips.append(f"Xato shu yerda: «{fw[0]}»." if fw and fw[0] else "Gapda so'z yetishmayapti yoki ortiqcha.")
+    else:
+        tips = [x for x in (it.get("hint"), it.get("note")) if x]
+        tips.append(f"Javob {len(a)} belgidan iborat, «{a[0]}…» bilan boshlanadi.")
     await m.answer("💡 " + "\n".join(esc(x) for x in tips))
 
 

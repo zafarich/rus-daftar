@@ -3,7 +3,7 @@
 Bitta konteynerda ikki narsa ishlaydi:
 
 - **Telegram bot.** Kuniga bir necha marta o'zi savol yuboradi (so'z, predlog, qo'shimcha, to'liq gap, tanlash), javobingizni tekshiradi va keyingisiga o'tadi. Ertalab 7 kunlik rejaning bugungi vazifasini yuboradi, kechqurun «Bajarildimi?» deb so'raydi.
-- **Veb-daftar** (`https://DOMAIN`) — Telegram Mini App sifatida bot ichida ochiladi, brauzerda ham ishlaydi. Bo'limlar: qoida, flip kartochkalar, mashq (predlog / qo'shimcha / tanlash / tarjima / to'liq gap), tezkor «ramka» mashqi va 7 kunlik reja. Ruscha javobni ovoz chiqarib o'qiydi, Chrome'da javobni ovoz bilan aytish ham mumkin.
+- **Veb-daftar** (`https://DOMAIN`) — Telegram Mini App sifatida bot ichida ochiladi, brauzerda ham ishlaydi. Bo'limlar: qoida (jadval, misol va chizmalar bilan), flip kartochkalar, mashq (predlog / qo'shimcha / tanlash / xatoni topish / tarjima / to'liq gap, alohida «Xatolarim» ro'yxati), tezkor «ramka» mashqi va 7 kunlik reja. Ruscha javobni ovoz chiqarib o'qiydi, Chrome'da javobni ovoz bilan aytish ham mumkin.
 
 Xato qilingan savol 10 daqiqadan keyin, to'g'ri topilgani esa 1, 2, 4, 8… kundan keyin qaytadi (Leitner takrorlash usuli).
 
@@ -140,12 +140,13 @@ Vaqtlar `.env` da sozlanadi: `QUIZ_TIMES`, `PLAN_MORNING`, `PLAN_EVENING`.
 ```json
 {
   "slug": "predlozhny", "title": "…", "sort": 1,
-  "summary": "## Sarlavha\nMatn, **qalin**\n- ro'yxat",
+  "summary": ["## Sarlavha", "Matn, **qalin**", "> Я дома. — Men uydaman."],
   "cards":     [{"front": "Toshkentda", "back": "в Ташкенте", "note": "…"}],
   "exercises": [
     {"type": "gap",       "prompt": "Я живу ___ Ташкенте.", "answers": ["в"]},
     {"type": "ending",    "prompt": "Я работаю в банк___.", "answers": ["е"]},
     {"type": "choice",    "prompt": "Он ___ концерте.", "options": ["в","на"], "answers": ["на"]},
+    {"type": "fix",       "prompt": "Мама в работе.", "answers": ["Мама на работе"], "note": "…"},
     {"type": "translate", "prompt": "Men uydaman.", "answers": ["Я дома"]},
     {"type": "sentence",  "prompt": "Kecha to'yda edim.", "answers": ["Вчера я был на свадьбе"]}
   ],
@@ -156,6 +157,39 @@ Vaqtlar `.env` da sozlanadi: `QUIZ_TIMES`, `PLAN_MORNING`, `PLAN_EVENING`.
 ```
 
 `gap`, `ending` va `drill` savollarida `___` bo'lishi shart. Javob tekshiruvi katta-kichik harf, `ё/е` va tinish belgilariga qaramaydi. `ending` uchun «е», «банке» va «в банке» javoblarining hammasi qabul qilinadi.
+
+`fix` — «Xatoni topish»: `prompt` ataylab xato yozilgan gap, `answers` uning to'g'ri shakli. To'g'ri gap ham, faqat tuzatilgan so'z ham («на», «на работе») qabul qilinadi. `note` ga xato sababini yozing, u noto'g'ri javobdan keyin ko'rsatiladi.
+
+### Qoida matni (`summary`)
+
+`summary` — satrlar ro'yxati (yoki `\n` bilan ajratilgan bitta matn). Har bir satr boshidagi belgi uning turini bildiradi:
+
+| Satr boshi | Nima chiqadi |
+|---|---|
+| `## Sarlavha` | bo'lim sarlavhasi |
+| oddiy matn | xatboshi; `**qalin**` ajratib ko'rsatiladi (o'zgargan qo'shimchani shunday belgilang) |
+| `- matn` | ro'yxat |
+| `! matn` | tuzoq yoki muhim eslatma (qizil chiziqli blok) |
+| `> ruscha gap — o'zbekcha tarjima` | misol; bosilsa ruschasini ovoz chiqarib o'qiydi. Ajratkich: ` — ` |
+| `\| a \| b \| c \|` | jadval satri, birinchi satr sarlavha bo'ladi |
+| `@ belgi \| savol \| ruscha \| o'zbekcha` | chizma katagi; ketma-ket kelgan kataklar bitta qatorga teriladi |
+| `= bo'lak :: izoh \| bo'lak :: izoh` | gap qolipi: har bir bo'lak alohida katakda, ostida izohi |
+
+Chizma belgilari (quti — joy, nuqta — odam, strelka — harakat):
+
+| Belgi | Ma'nosi | Misol |
+|---|---|---|
+| `in` | ichida | в школе |
+| `to` | ichiga | в школу |
+| `from` | ichidan | из школы |
+| `on` | ustida, ochiq joyda | на работе |
+| `onto` | ustiga | на работу |
+| `off` | ustidan | с работы |
+| `at` | yonida | у окна |
+| `away` | odamdan | от брата |
+| `none` | yo'q | нет воды |
+
+Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/03_roditelny.json`.
 
 ## Zaxira nusxa
 

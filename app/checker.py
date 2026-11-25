@@ -26,13 +26,50 @@ def expected_full(item) -> str:
     return fill(item["prompt"], a) if "___" in item["prompt"] else a
 
 
+def _fix_span(prompt: str, answer: str):
+    """Xato va to'g'ri gap so'zlari; boshi va oxiridagi bir xil so'zlar tashlangach qolgan oraliqlar."""
+    pw, aw = norm(prompt).split(), norm(answer).split()
+    short = min(len(pw), len(aw))
+    a = 0
+    while a < short and pw[a] == aw[a]:
+        a += 1
+    tail = 0
+    while tail < short - a and pw[-1 - tail] == aw[-1 - tail]:
+        tail += 1
+    if a == len(aw) - tail:   # to'g'ri gapda yangi so'z yo'q: faqat ortiqcha so'z olib tashlangan
+        return None
+    return pw, aw, a, len(pw) - tail, len(aw) - tail
+
+
+def fixed_words(prompt: str, answer: str) -> tuple[str, str] | None:
+    """«Xatoni topish»: (xato bo'lak, to'g'ri bo'lak) yoki None. So'z yetishmasa xato bo'lak bo'sh."""
+    sp = _fix_span(prompt, answer)
+    if not sp:
+        return None
+    pw, aw, a, pb, ab = sp
+    return " ".join(pw[a:pb]), " ".join(aw[a:ab])
+
+
+def fix_candidates(prompt: str, answer: str) -> set[str]:
+    """Tuzatilgan so'zni o'z ichiga olgan har qanday bo'lak: «с», «с работы», «пришёл с работы»."""
+    sp = _fix_span(prompt, answer)
+    if not sp:
+        return set()
+    _, aw, a, _, ab = sp
+    return {" ".join(aw[i:j]) for i in range(a + 1) for j in range(ab, len(aw) + 1)}
+
+
 def candidates(item) -> set[str]:
-    """Qabul qilinadigan javoblar: javobning o'zi, to'ldirilgan so'z, predlog+so'z, to'liq gap."""
+    """Qabul qilinadigan javoblar: javobning o'zi, to'ldirilgan so'z, predlog+so'z, to'liq gap.
+
+    «Xatoni topish»da to'g'ri gap ham, tuzatilgan so'z yoki shu so'z qatnashgan bo'lak ham o'tadi."""
     p = item["prompt"]
     out = set()
     for a in item["answers"]:
         out.add(norm(a))
-        if "___" in p:
+        if item.get("kind") == "fix":
+            out |= fix_candidates(p, a)
+        elif "___" in p:
             out.add(norm(fill(p, a)))
             m = re.search(r"(\S*)___(\S*)", p)
             if m:
