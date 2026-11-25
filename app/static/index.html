@@ -107,6 +107,8 @@ button.eg:hover{box-shadow:inset 0 0 0 1px var(--ink-soft)}
 .pic svg{width:80px;height:55px;color:var(--ink);fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .pic svg .f{fill:currentColor;stroke:none}
 .pic svg .x{stroke:var(--red)}
+.pic svg .bg{fill:var(--sheet)}
+.pic svg .o{fill:currentColor;stroke:var(--sheet);stroke-width:3}
 .pic svg .d{stroke-dasharray:4 4.5}
 .pic .q{font-size:.72rem;color:var(--muted);line-height:1.25}
 .pic .ru{font-weight:600;line-height:1.25;margin-top:.2rem;overflow-wrap:anywhere}
@@ -383,6 +385,12 @@ const PICS = {
   beside: '<circle class="f" cx="15" cy="25" r="5"/><circle cx="42" cy="15" r="5"/><path d="M33 35a9 9 0 0 1 18 0"/>',
   give: '<rect class="f" x="4" y="17" width="10" height="10" rx="2"/><path d="M19 22h17"/><path d="m30 16 6 6-6 6"/><circle cx="50" cy="15" r="5"/><path d="M41 35a9 9 0 0 1 18 0"/>',
   along: '<path d="M6 11h52M6 33h52"/><path d="M15 22h32"/><path d="m41 16 6 6-6 6"/>',
+  with: '<circle cx="21" cy="15" r="5"/><path d="M12 35a9 9 0 0 1 18 0"/><circle cx="43" cy="15" r="5"/><path d="M34 35a9 9 0 0 1 18 0"/>',
+  above: '<rect x="18" y="20" width="28" height="20" rx="5"/><circle class="f" cx="32" cy="9" r="5"/>',
+  under: '<rect x="18" y="4" width="28" height="20" rx="5"/><circle class="f" cx="32" cy="35" r="5"/>',
+  front: '<rect x="24" y="5" width="28" height="28" rx="5"/><circle class="o" cx="24" cy="31" r="6"/>',
+  behind: '<circle class="f" cx="35" cy="12" r="6"/><rect class="bg" x="13" y="12" width="28" height="28" rx="5"/>',
+  between: '<rect x="4" y="10" width="16" height="24" rx="4"/><rect x="44" y="10" width="16" height="24" rx="4"/><circle class="f" cx="32" cy="22" r="5"/>',
 };
 function pic(name) {
   const t = document.createElement("template");

@@ -192,8 +192,14 @@ Chizma belgilari (quti — joy, nuqta — siz, odam shakli — boshqa kishi, str
 | `beside` | odamning huzurida | у брата |
 | `give` | kimgadir beriladi | дать брату |
 | `along` | bo'ylab | по улице |
+| `with` | birga, bilan | с братом |
+| `above` | tepasida | над столом |
+| `under` | ostida | под столом |
+| `front` | oldida | перед домом |
+| `behind` | orqasida | за домом |
+| `between` | orasida | между домом и парком |
 
-Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/04_datelny.json`.
+Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/05_tvoritelny.json`.
 
 ## Zaxira nusxa
 
