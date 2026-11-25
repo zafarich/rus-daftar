@@ -175,7 +175,7 @@ Vaqtlar `.env` da sozlanadi: `QUIZ_TIMES`, `PLAN_MORNING`, `PLAN_EVENING`.
 | `@ belgi \| savol \| ruscha \| o'zbekcha` | chizma katagi; ketma-ket kelgan kataklar bitta qatorga teriladi |
 | `= bo'lak :: izoh \| bo'lak :: izoh` | gap qolipi: har bir bo'lak alohida katakda, ostida izohi |
 
-Chizma belgilari (quti — joy, nuqta — odam, strelka — harakat):
+Chizma belgilari (quti — joy, nuqta — siz, odam shakli — boshqa kishi, strelka — harakat):
 
 | Belgi | Ma'nosi | Misol |
 |---|---|---|
@@ -188,8 +188,12 @@ Chizma belgilari (quti — joy, nuqta — odam, strelka — harakat):
 | `at` | yonida | у окна |
 | `away` | odamdan | от брата |
 | `none` | yo'q | нет воды |
+| `toward` | odamning oldiga | к брату |
+| `beside` | odamning huzurida | у брата |
+| `give` | kimgadir beriladi | дать брату |
+| `along` | bo'ylab | по улице |
 
-Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/03_roditelny.json`.
+Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/04_datelny.json`.
 
 ## Zaxira nusxa
 

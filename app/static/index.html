@@ -368,7 +368,7 @@ function render() {
 //   "| a | b |"                jadval, birinchi satr sarlavha
 //   "@ belgi | savol | ruscha | o'zbekcha"   chizma (belgi: PICS kalitlaridan biri)
 //   "= bo'lak :: izoh | bo'lak :: izoh"      gap qolipi
-// Chizmalar: quti — joy, nuqta — siz, strelka — harakat. Faqat shu o'zgarmas rasmlar chiziladi.
+// Chizmalar: quti — joy, nuqta — siz, odam shakli — boshqa kishi, strelka — harakat. Faqat shu o'zgarmas rasmlar chiziladi.
 const PICS = {
   in: '<rect x="18" y="8" width="28" height="28" rx="5"/><circle class="f" cx="32" cy="22" r="5"/>',
   to: '<rect x="30" y="8" width="28" height="28" rx="5"/><path d="M4 22h36"/><path d="m34 16 6 6-6 6"/>',
@@ -379,6 +379,10 @@ const PICS = {
   at: '<rect x="28" y="8" width="28" height="28" rx="5"/><circle class="f" cx="13" cy="22" r="5"/>',
   away: '<circle cx="14" cy="15" r="5"/><path d="M5 35a9 9 0 0 1 18 0"/><path d="M30 22h28"/><path d="m52 16 6 6-6 6"/>',
   none: '<rect class="d" x="18" y="8" width="28" height="28" rx="5"/><path class="x" d="m27 17 10 10M37 17 27 27"/>',
+  toward: '<path d="M6 22h28"/><path d="m28 16 6 6-6 6"/><circle cx="50" cy="15" r="5"/><path d="M41 35a9 9 0 0 1 18 0"/>',
+  beside: '<circle class="f" cx="15" cy="25" r="5"/><circle cx="42" cy="15" r="5"/><path d="M33 35a9 9 0 0 1 18 0"/>',
+  give: '<rect class="f" x="4" y="17" width="10" height="10" rx="2"/><path d="M19 22h17"/><path d="m30 16 6 6-6 6"/><circle cx="50" cy="15" r="5"/><path d="M41 35a9 9 0 0 1 18 0"/>',
+  along: '<path d="M6 11h52M6 33h52"/><path d="M15 22h32"/><path d="m41 16 6 6-6 6"/>',
 };
 function pic(name) {
   const t = document.createElement("template");
