@@ -202,7 +202,7 @@ Chizma belgilari (quti — joy, nuqta — siz, odam shakli — boshqa kishi, str
 | `few` | ikki, uch, to'rt | два стола |
 | `many` | ko'p | пять столов |
 
-Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/06_koplik.json`.
+Bo'sh satr blokni yopadi (masalan, ikki jadval orasida). Tayyor namuna: `topics/06_koplik.json`. Jadvalni telefon ekraniga sig'diring: 5 ustundan oshirmang va katakdagi matnni qisqa yozing.
 
 ## Zaxira nusxa
 
